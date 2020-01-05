@@ -5,16 +5,17 @@ import cv2
 
 CAMERA = 2
 
+# 顔検出カスケードファイル読み込み
+cascade_path = "/usr/local/var/pyenv/versions/3.7.1/lib/python3.7/site-packages/cv2/data/"
+cascade_file = "haarcascade_frontalface_default.xml"
+cascade = cv2.CascadeClassifier(cascade_path+cascade_file)
+
 def main(base_width, base_height):
     # カメラ読み込み
     cap = cv2.VideoCapture(CAMERA)
+    fps = cap.get(cv2.CAP_PROP_FPS)
     # 合成画像読み込み
     img = cv2.imread('obake_resized.png')
-
-    # 顔検出カスケードファイル読み込み
-    cascade_path = "/usr/local/var/pyenv/versions/3.7.1/lib/python3.7/site-packages/cv2/data/"
-    cascade_file = "haarcascade_frontalface_default.xml"
-    cascade = cv2.CascadeClassifier(cascade_path+cascade_file)
 
     # 矩形用の色
     color = (0, 0, 255)
@@ -57,9 +58,6 @@ def main(base_width, base_height):
 
 def calibration():
     cap = cv2.VideoCapture(CAMERA)
-    cascade_path = "/usr/local/var/pyenv/versions/3.7.1/lib/python3.7/site-packages/cv2/data/"
-    cascade_file = "haarcascade_frontalface_default.xml"
-    cascade = cv2.CascadeClassifier(cascade_path+cascade_file)
     color = (0, 0, 255)
     while(1):
         ret, frame = cap.read()
