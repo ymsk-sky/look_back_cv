@@ -21,6 +21,7 @@ def main():
         if(not ret):
             break
 
+        # 10フレームに一度の処理とする
         if(cnt%10 == 0):
             # グレースケール
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
