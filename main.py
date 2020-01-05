@@ -6,6 +6,8 @@ import cv2
 def main():
     # カメラ読み込み
     cap = cv2.VideoCapture(2)
+    # 合成画像読み込み
+    img = cv2.imread('obake_resized.png')
 
     # 顔検出カスケードファイル読み込み
     cascade_path = "/usr/local/var/pyenv/versions/3.7.1/lib/python3.7/site-packages/cv2/data/"
