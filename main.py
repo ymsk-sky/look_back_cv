@@ -17,8 +17,10 @@ def main(base_width, base_height):
     # 合成画像読み込み
     img = cv2.imread('obake_resized.png')
 
-    # 矩形用の色
-    color = (0, 0, 255)
+    rows, cols, channels = img.shape
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    ret, mask = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY)
+    mask_inv = cv2.bitwise_not(mask)
 
     cnt = 0
     while(1):
@@ -40,10 +42,8 @@ def main(base_width, base_height):
 
             # キャリブレーションしたサイズと同程度の場合に顔と判定
             if(rect[2] > base_width*0.8 or rect[3] > base_height*0.8):
-                # 矩形を描く
-                cv2.rectangle(frame, tuple(rect[0:2]), tuple(rect[0:2]+rect[2:4]), color, thickness=4)
-        else:
-            pass
+                # cv2.rectangle(frame, tuple(rect[0:2]), tuple(rect[0:2]+rect[2:4]), (255, 0, 0), thickness=4)
+                appear_obake(frame, img, rows, cols, mask, mask_inv)
 
         # 表示
         cv2.imshow('cap', frame)
@@ -54,6 +54,15 @@ def main(base_width, base_height):
 
     cap.release()
     cv2.destroyAllWindows()
+
+
+def appear_obake(frame, img, rows, cols, mask, mask_inv):
+    roi = frame[0:rows, 0:cols]
+    frame_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+    img_fg = cv2.bitwise_and(img, img, mask=mask)
+
+    dst = cv2.add(frame_bg, img_fg)
+    frame[0:rows, 0:cols] = dst
 
 
 def calibration():
@@ -72,7 +81,7 @@ def calibration():
 
         cv2.imshow('cap', frame)
 
-        if(cv2.waitKey(1) & 0xFF == ord('q')):
+        if(cv2.waitKey(1) & 0xFF == ord('o')):
             break
 
     cap.release()
