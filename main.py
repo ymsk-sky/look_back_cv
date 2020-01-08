@@ -19,7 +19,7 @@ cascade = cv2.CascadeClassifier(cascade_path+cascade_file)
 def main():
     # カメラ読み込み
     cap = cv2.VideoCapture(CAMERA)
-    fps = cap.get(cv2.CAP_PROP_FPS)
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
     # 合成画像読み込み
     img = cv2.imread('obake_resized.png')
 
@@ -44,6 +44,7 @@ def main():
 
         # 10フレームに一度の処理とする
         if(cnt%10 == 0):
+            cnt = 0
             # グレースケール
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # すべての顔（らしきところを）認識
@@ -68,13 +69,13 @@ def main():
         # 表示
         cv2.imshow('cap', frame)
 
-        if(cv2.waitKey(1) & 0xFF == ord('o')):
+        key = cv2.waitKey(fps)
+        if(key & 0xFF == ord('o')):
             if(calibration_flag):
                 base_width = rect[2]
                 base_height = rect[3]
             calibration_flag = not calibration_flag
-
-        if(cv2.waitKey(1) & 0xFF == ord('q')):
+        elif(key & 0xFF == ord('q')):
             break
         cnt += 1
 
