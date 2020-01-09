@@ -15,13 +15,15 @@ cascade_path = "/usr/local/var/pyenv/versions/3.7.1/lib/python3.7/site-packages/
 cascade_file = "haarcascade_frontalface_default.xml"
 cascade = cv2.CascadeClassifier(cascade_path+cascade_file)
 
-
 def main():
     # カメラ読み込み
     cap = cv2.VideoCapture(CAMERA)
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     # 合成画像読み込み
     img = cv2.imread('obake_resized.png')
+    # ウィンドウネームを設定
+    window = 'cap'
+    cv2.namedWindow(window)
 
     # 合成する画像情報を取得
     rows, cols, channels = img.shape
@@ -64,10 +66,13 @@ def main():
                                          (255, 0, 0), thickness=4)
 
                 # 顔検出時（正面を向いているとき）におばけ出現 <-> 振り向くと消える
-                appear_obake(frame, img, rows, cols, mask, mask_inv)
+                appear_obake(frame, img,
+                             rows, cols,
+                             appear_x, appear_y,
+                             mask, mask_inv)
 
         # 表示
-        cv2.imshow('cap', frame)
+        cv2.imshow(window, frame)
 
         key = cv2.waitKey(fps)
         if(key & 0xFF == ord('o')):
