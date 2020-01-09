@@ -66,10 +66,7 @@ def main():
                                          (255, 0, 0), thickness=4)
 
                 # 顔検出時（正面を向いているとき）におばけ出現 <-> 振り向くと消える
-                appear_obake(frame, img,
-                             rows, cols,
-                             appear_x, appear_y,
-                             mask, mask_inv)
+                appear_obake(frame, img, rows, cols, mask, mask_inv)
 
         # 表示
         cv2.imshow(window, frame)
@@ -90,13 +87,13 @@ def main():
 
 def appear_obake(frame, img, rows, cols, mask, mask_inv):
     # 合成する位置を決める
-    roi = frame[0:rows, 0:cols]
+    roi = frame[500:500+rows, 0:cols]
 
     frame_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
     img_fg = cv2.bitwise_and(img, img, mask=mask)
 
     dst = cv2.add(frame_bg, img_fg)
-    frame[0:rows, 0:cols] = dst
+    frame[500:500+rows, 0:cols] = dst
 
 
 if __name__ == '__main__':
