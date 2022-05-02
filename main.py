@@ -8,12 +8,13 @@ import numpy as np
 import cv2
 
 # カメラ番号
-CAMERA = 2
+CAMERA = 0
 
 # 顔検出カスケードファイル読み込み
 cascade_path = "/usr/local/var/pyenv/versions/3.7.1/lib/python3.7/site-packages/cv2/data/"
 cascade_file = "haarcascade_frontalface_default.xml"
-cascade = cv2.CascadeClassifier(cascade_path+cascade_file)
+# cascade = cv2.CascadeClassifier(cascade_path+cascade_file)
+cascade = cv2.CascadeClassifier("./" + cascade_file)
 
 def main():
     # カメラ読み込み
