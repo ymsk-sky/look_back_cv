@@ -9,6 +9,8 @@ look back: 振り返る
 TODO: demo動画(gif)
 
 # Installation
+
+## Libraries
 - openCV
 - numpy
 
@@ -17,6 +19,9 @@ $ pip install numpy
 $ pip install opencv-python
 $ pip install opencv-contrib-python
 ```
+
+## Cascade file
+[haarcascade_frontalface_default.xml](https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml)
 
 # Usage
 
