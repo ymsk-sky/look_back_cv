@@ -1,9 +1,19 @@
-# look_back_cv
-OpenCVによる顔検出を行ない、振り向きを検出する。
+# LOOK BACK CV
+Webカメラを使用した場面（オンライン会議、オンライン飲み会など）において`幽霊`が現れるドッキリを行なう。
+OpenCVによる顔検出を行ない、正面を向いているときに`幽霊`を出現させ、振り向いたときはその振り向きを検出し`幽霊`を消す挙動をする。
 
-## look back
-「振り返る」
+look back: 振り返る
 
-## tech
-- 顔検出
-- 画像合成
+# DEMO
+
+TODO: demo動画(gif)
+
+# Installation
+- openCV
+- numpy
+
+```bash
+$ pip install numpy
+$ pip install opencv-python
+$ pip install opencv-contrib-python
+```
