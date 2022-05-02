@@ -17,3 +17,13 @@ $ pip install numpy
 $ pip install opencv-python
 $ pip install opencv-contrib-python
 ```
+
+# Usage
+
+## 実行
+
+```bash
+$ git clone https://github.com/ymsk-sky/look_back_cv.git
+$ cd look_back_cv
+$ python look_back.py
+```
