@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-from sqlalchemy import within_group
 
 CAMERA = 0
 CASCADE_FILE = "./haarcascade_frontalface_default.xml"
@@ -9,7 +8,10 @@ IMAGE_FILE = "./obake_resized.png"
 def main():
     # カメラ読み込み
     capture = cv2.VideoCapture(CAMERA)
+    # カメラオプション取得
     fps = int(capture.get(cv2.CAP_PROP_FPS))
+    cap_w = capture.get(cv2.CAP_PROP_FRAME_WIDTH)
+    cap_h = capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
     window = "cap"
     cv2.namedWindow(window)
 
@@ -48,7 +50,7 @@ def main():
             rect = facerects[np.argmax([r[2] for r in facerects])]
 
             # おばけ出現
-            appear_obake(frame, img, rows, cols, mask, mask_inv)
+            appear_obake(frame, img, rows, cols, mask, mask_inv, cap_w, cap_h)
 
         # 表示
         cv2.imshow(window, frame)
@@ -63,9 +65,10 @@ def main():
     cv2.destroyAllWindows()
 
 
-def appear_obake(frame, img, rows, cols, mask, mask_inv):
+def appear_obake(frame, img, rows, cols, mask, mask_inv, w, h):
     # 合成位置を決定
-    roi = frame[0:rows, 0:cols]
+    x, y = w // 4, h // 4
+    roi = frame[x:x+rows, y:y+cols]
 
     frame_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
     img_fg = cv2.bitwise_and(img, img, mask=mask)
