@@ -27,7 +27,10 @@ def main():
     _, mask = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY)
     mask_inv = cv2.bitwise_not(mask)
 
-    # フレーム数管理
+    # 顔判定の元となるサイズ
+    base_w, base_h = 0, 0
+
+    calibration_f = False
     cnt = 0
 
     while(1):
@@ -49,6 +52,13 @@ def main():
             # 矩形が最大のものを顔候補とする
             rect = facerects[np.argmax([r[2] for r in facerects])]
 
+            # 顔サイズと同程度の場合に顔と判定
+            if(rect[2] > base_w * 0.8 or rect[3] > base_h * 0.8):
+                if(calibration_f):
+                    # キャリブレーション中は判定矩形を表示
+                    cv2.rectangle(frame, tuple(rect[0:2]),
+                                         tuple(rect[0:2] + rect[2:4]),
+                                         (255, 0, 0), thickness=4)
             # おばけ出現
             appear_obake(frame, img, rows, cols, mask, mask_inv, cap_w, cap_h)
 
@@ -58,6 +68,12 @@ def main():
         key = cv2.waitKey(fps)
         if(key & 0xFF == ord('q')):
             break
+        elif(key & 0xFF == ord('c')):
+            if(calibration_f):
+                base_w = rect[2]
+                base_h = rect[3]
+            # 再度押すまでキャリブレーションし続ける
+            calibration_f = not calibration_f
         
         cnt += 1
         
@@ -67,14 +83,14 @@ def main():
 
 def appear_obake(frame, img, rows, cols, mask, mask_inv, w, h):
     # 合成位置を決定
-    x, y = w // 4, h // 4
+    x, y = int(w / 4), int(h / 4)
     roi = frame[x:x+rows, y:y+cols]
 
     frame_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
     img_fg = cv2.bitwise_and(img, img, mask=mask)
 
     dst = cv2.add(frame_bg, img_fg)
-    frame[0:rows, 0:cols] = dst
+    frame[x:x+rows, y:y+cols] = dst
 
 
 if __name__ == "__main__":
