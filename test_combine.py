@@ -3,9 +3,13 @@ import cv2
 
 IMAGE_FILE ="./obake_resized.png"
 BACK_FILE ="./background.jpg"
+G_FILE ="./gradation.jpg"
 
 img = cv2.imread(IMAGE_FILE)
 background = cv2.imread(BACK_FILE)
+g = cv2.imread(G_FILE)
+g2 = cv2.resize(g, img.shape[1::-1])
+g2 = cv2.bitwise_not(g2)
 
 rows, cols, _ = img.shape
 w, h, _ = background.shape
