@@ -1,0 +1,4 @@
+gradationファイル(gradation.jpg)のgray値(0~255)の値を参考にして,
+imgファイル(obake_resized.png)のα値を決定する
+
+「透明のところは透明のまま」処理はマスク使えばできそう
