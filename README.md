@@ -21,7 +21,7 @@ $ pip install opencv-contrib-python
 ```
 
 ## Cascade file
-[haarcascade_frontalface_default.xml](https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml)
+<a href="https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml" target="_blank">haarcascade_frontalface_default.xml</a>
 
 # Usage
 
