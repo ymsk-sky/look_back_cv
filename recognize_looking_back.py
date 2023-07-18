@@ -20,10 +20,13 @@ def main():
     # 顔検出準備
     cascade_file = os.path.join(config["cascade_path"], config["cascade_file"])
     cascade = cv2.CascadeClassifier(cascade_file)
-
     # 顔判定の元となるサイズ
     base_w, base_h = cap_w//4, cap_h//4
+    # キャリブレーション用フラグ
+    calibrating = False
 
+    print("press q to quit")
+    print("press c to calibrate face size")
     while 1:
         ret, frame = cap.read()
         if not ret:
@@ -39,9 +42,13 @@ def main():
             rect = face_rects[np.argmax([r[2] for r in face_rects])]
             # 基準の大きさより大きいなら顔と判定
             if rect[2] > base_w*0.8 or rect[3] > base_h*0.8:
+                if calibrating:
+                    rect_color = (0, 0, 255)
+                else:
+                    rect_color = (255, 0, 0)
                 cv2.rectangle(
                     frame, tuple(rect[0:2]), tuple(rect[0:2] + rect[2:4]),
-                    (255, 0, 0), thickness=4
+                    rect_color, thickness=4
                 )
 
         cv2.imshow(window, frame)
@@ -49,6 +56,11 @@ def main():
         key = cv2.waitKey(fps)
         if key & 0xFF == ord("q"):
             break
+        elif key & 0xFF == ord("c"):
+            if calibrating:
+                base_w = rect[2]
+                base_h = rect[3]
+            calibrating = not calibrating
 
     cap.release()
     cv2.destroyWindow(window)
