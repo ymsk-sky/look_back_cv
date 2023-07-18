@@ -21,21 +21,28 @@ def main():
     cascade_file = os.path.join(config["cascade_path"], config["cascade_file"])
     cascade = cv2.CascadeClassifier(cascade_file)
 
+    # 顔判定の元となるサイズ
+    base_w, base_h = cap_w//4, cap_h//4
+
     while 1:
         ret, frame = cap.read()
         if not ret:
             continue
 
+        # 顔認識
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         face_rects = cascade.detectMultiScale(
             gray, scaleFactor=1.1, minNeighbors=1, minSize=(1, 1)
         )
         if len(face_rects) > 0:
+            # 最大の矩形を顔候補とする
             rect = face_rects[np.argmax([r[2] for r in face_rects])]
-            cv2.rectangle(
-                frame, tuple(rect[0:2]), tuple(rect[0:2] + rect[2:4]),
-                (255, 0, 0), thickness=4
-            )
+            # 基準の大きさより大きいなら顔と判定
+            if rect[2] > base_w*0.8 or rect[3] > base_h*0.8:
+                cv2.rectangle(
+                    frame, tuple(rect[0:2]), tuple(rect[0:2] + rect[2:4]),
+                    (255, 0, 0), thickness=4
+                )
 
         cv2.imshow(window, frame)
 
