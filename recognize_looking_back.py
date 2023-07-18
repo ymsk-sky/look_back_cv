@@ -25,6 +25,9 @@ def main():
     # キャリブレーション用フラグ
     calibrating = False
 
+    print(f"camera size: {cap_w}x{cap_h}")
+    print(f"camera fps: {fps}")
+
     print("press q to quit")
     print("press c to calibrate face size")
     while 1:
@@ -50,6 +53,12 @@ def main():
                     frame, tuple(rect[0:2]), tuple(rect[0:2] + rect[2:4]),
                     rect_color, thickness=4
                 )
+            else:
+                # 顔候補はあったが顔と判定されなかった場合: 合成
+                appear_ghost(frame, cap_w, cap_h)
+        else:
+            # 顔候補がなかった場合: 合成
+            appear_ghost(frame, cap_w, cap_h)
 
         cv2.imshow(window, frame)
 
@@ -64,6 +73,12 @@ def main():
 
     cap.release()
     cv2.destroyWindow(window)
+
+
+def appear_ghost(frame, w, h):
+    # 画面上の暗い場所を探索
+    # 画像をいい感じに重畳表示
+    pass
 
 
 def load_config(path="./conf"):
