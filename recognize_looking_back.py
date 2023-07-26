@@ -7,6 +7,11 @@ import cv2
 import numpy as np
 
 
+GHOST_POS_W = 0
+GHOST_POS_H = 0
+WINDOW_NAME = "cap"
+
+
 def main():
     config = load_config()
 
@@ -14,8 +19,7 @@ def main():
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     cap_w = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
     cap_h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
-    window = "cap"
-    cv2.namedWindow(window)
+    cv2.namedWindow(WINDOW_NAME)
 
     # 顔検出準備
     cascade_file = os.path.join(config["cascade_path"], config["cascade_file"])
@@ -60,7 +64,7 @@ def main():
             # 顔候補がなかった場合: 合成
             appear_ghost(frame, cap_w, cap_h)
 
-        cv2.imshow(window, frame)
+        cv2.imshow(WINDOW_NAME, frame)
 
         key = cv2.waitKey(fps)
         if key & 0xFF == ord("q"):
@@ -72,7 +76,7 @@ def main():
             calibrating = not calibrating
 
     cap.release()
-    cv2.destroyWindow(window)
+    cv2.destroyWindow(WINDOW_NAME)
 
 
 def appear_ghost(frame, w, h):
