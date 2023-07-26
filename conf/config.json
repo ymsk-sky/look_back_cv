@@ -1,6 +1,7 @@
 {
     "camera": 0,
     "image_path": "./img",
+    "image_file": "obake_resized.png",
     "cascade_path": "./.venv/Lib/site-packages/cv2/data",
     "cascade_file": "haarcascade_frontalface_default.xml"
 }

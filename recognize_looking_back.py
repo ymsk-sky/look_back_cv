@@ -21,6 +21,13 @@ def main():
     cap_h = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     cv2.namedWindow(WINDOW_NAME)
 
+    # 合成する画像を準備
+    img_file = os.path.join(config["image_path"], config["image_file"])
+    ghost_img = cv2.imread(img_file)
+    gray_img = cv2.cvtColor(ghost_img, cv2.COLOR_BGR2GRAY)
+    _, mask = cv2.threshold(gray_img, 10, 255, cv2.THRESH_BINARY)
+    mask_inv = cv2.bitwise_not(mask)
+
     # 顔検出準備
     cascade_file = os.path.join(config["cascade_path"], config["cascade_file"])
     cascade = cv2.CascadeClassifier(cascade_file)
@@ -59,10 +66,10 @@ def main():
                 )
             else:
                 # 顔候補はあったが顔と判定されなかった場合: 合成
-                appear_ghost(frame, cap_w, cap_h)
+                appear_ghost(frame, cap_w, cap_h, ghost_img, mask, mask_inv)
         else:
             # 顔候補がなかった場合: 合成
-            appear_ghost(frame, cap_w, cap_h)
+            appear_ghost(frame, cap_w, cap_h, ghost_img, mask, mask_inv)
 
         cv2.imshow(WINDOW_NAME, frame)
 
@@ -79,10 +86,17 @@ def main():
     cv2.destroyWindow(WINDOW_NAME)
 
 
-def appear_ghost(frame, w, h):
+def appear_ghost(frame, w, h, img, mask, mask_inv):
     # 画面上の暗い場所を探索
     # 画像をいい感じに重畳表示
-    pass
+    row, col = img.shape[:2]
+    roi = frame[GHOST_POS_W:GHOST_POS_W+row,
+                GHOST_POS_H:GHOST_POS_H+col]
+
+    frame_background = cv2.bitwise_and(roi, roi, mask=mask_inv)
+    img_foreground = cv2.bitwise_and(img, img, mask=mask)
+    res = cv2.add(frame_background, img_foreground)
+    frame[GHOST_POS_W:GHOST_POS_W+row, GHOST_POS_H:GHOST_POS_H+col] = res
 
 
 def load_config(path="./conf"):
